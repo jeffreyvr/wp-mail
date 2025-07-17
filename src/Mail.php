@@ -209,9 +209,13 @@ class Mail
         ]));
     }
 
-    public function line(string $text): self
+    public function line(string|callable $text): self
     {
-        $this->content[] = new Line($this, $text);
+        if (is_callable($text)) {
+            $this->content[] = new Line($this, $text($this));
+        } else {
+            $this->content[] = new Line($this, $text);
+        }
 
         return $this;
     }

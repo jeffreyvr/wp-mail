@@ -41,7 +41,7 @@ Mail::make()
 - `cc(string $email, string $name = '')` - Add CC recipient
 - `bcc(string $email, string $name = '')` - Add BCC recipient
 - `from(string $email, string $name = '')` - Set sender information
-- `line(string $text)` - Add a text line to the email
+- `line(string|callable $text)` - Add a text line to the email
 - `button(string $text, string $url)` - Add a call-to-action button
 - `view(string $path, array $data = [])` - Use a view template
 - `plainText(string|callable $plainText)` - Set the plain text version of the email
