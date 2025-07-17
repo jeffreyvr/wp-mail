@@ -24,7 +24,9 @@ class Mail
 
     public string $from;
 
-    public string $website;
+    public string $siteName;
+
+    public string $siteUrl;
 
     public ?string $unsubscribeUrl = null;
 
@@ -40,7 +42,8 @@ class Mail
     {
         $this->viewPath = __DIR__.'/../resources/views/';
         $this->template = 'template';
-        $this->website = get_option('blogname');
+        $this->siteName = get_option('blogname');
+        $this->siteUrl = get_option('home');
 
         $this->from = get_option('blogname').' <'.get_option('admin_email').'>';
 
@@ -59,9 +62,16 @@ class Mail
         return $this;
     }
 
-    public function website(string $website): self
+    public function siteName(string $siteName): self
     {
-        $this->website = $website;
+        $this->siteName = $siteName;
+
+        return $this;
+    }
+
+    public function siteUrl(string $siteUrl): self
+    {
+        $this->siteUrl = $siteUrl;
 
         return $this;
     }

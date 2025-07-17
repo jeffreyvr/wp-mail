@@ -10,6 +10,8 @@
 
 For those wanting to send good looking WordPress emails with a fluent API.
 
+![Example](art/example.png)
+
 ## Installation
 
 ```bash
