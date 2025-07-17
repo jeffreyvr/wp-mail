@@ -42,6 +42,9 @@ Mail::make()
 - `line(string $text)` - Add a text line to the email
 - `button(string $text, string $url)` - Add a call-to-action button
 - `view(string $path, array $data = [])` - Use a view template
+- `plainText(string|callable $plainText)` - Set the plain text version of the email
+- `unsubscribeUrl(string $unsubscribeUrl)` - Set the unsubscribe URL
+- `unsubscribeText(string $unsubscribeText)` - Set the unsubscribe text
 - `send()` - Send the email
 
 In the view you can use `$mail` to access the mail object.
