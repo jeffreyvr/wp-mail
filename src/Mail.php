@@ -14,6 +14,8 @@ class Mail
 
     public ?string $plainText = null;
 
+    public ?string $preview = null;
+
     public string $subject;
 
     public string $to;
@@ -115,6 +117,13 @@ class Mail
         return $this;
     }
 
+    public function preview(string $preview): self
+    {
+        $this->preview = $preview;
+
+        return $this;
+    }
+
     public function from(string $name, string $email): self
     {
         $this->from = "$name <{$email}>";
@@ -195,8 +204,6 @@ class Mail
         $path = pathinfo($view, PATHINFO_DIRNAME);
         $file = pathinfo($view, PATHINFO_FILENAME);
 
-        ray($this);
-
         return (new WPViews($path))->render($file, array_merge($data, [
             'mail' => $this,
         ]));
@@ -227,6 +234,13 @@ class Mail
         return $this;
     }
 
+    public function preparePhpmailer($phpmailer)
+    {
+        $phpmailer->isHTML(true);
+
+        $phpmailer->AltBody = $this->getPlainText();
+    }
+
     public function send(): bool
     {
         if (empty($this->to)) {
@@ -240,8 +254,6 @@ class Mail
         if (empty($this->from)) {
             throw new \Exception('From is required');
         }
-
-        $boundary = uniqid('wp_mail_boundary_');
 
         $headers = [
             'MIME-Version: 1.0',
@@ -257,16 +269,12 @@ class Mail
             $headers[] = 'BCC: '.$this->bcc;
         }
 
-        $message = "--{$boundary}\r\n";
-        $message .= "Content-Type: text/plain; charset=UTF-8\r\n";
-        $message .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
-        $message .= $this->getPlainText()."\r\n\r\n";
-        $message .= "--{$boundary}\r\n";
-        $message .= "Content-Type: text/html; charset=UTF-8\r\n";
-        $message .= "Content-Transfer-Encoding: 7bit\r\n\r\n";
-        $message .= $this->getBody()."\r\n\r\n";
-        $message .= "--{$boundary}--";
+        add_action('phpmailer_init', [$this, 'preparePhpmailer']);
 
-        return wp_mail($this->to, $this->subject, $message, $headers);
+        $sent = wp_mail($this->to, $this->subject, $this->getBody(), $headers);
+
+        remove_action('phpmailer_init', [$this, 'preparePhpmailer']);
+
+        return $sent;
     }
 }
