@@ -37,6 +37,7 @@ Mail::make()
 ### Available Methods
 
 - `subject(string $subject)` - Set the email subject
+- `preview(string $preview)` - Set the preview text
 - `to(string $email, string $name = '')` - Add recipient
 - `cc(string $email, string $name = '')` - Add CC recipient
 - `bcc(string $email, string $name = '')` - Add BCC recipient
